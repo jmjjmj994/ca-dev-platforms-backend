@@ -5,10 +5,11 @@ import { createClient } from '@supabase/supabase-js';
 const supabase = createClient('https://gnumotcfovtrisrpyswr.supabase.co', process.env.CLIENTKEY);
 //cors
 const app = express();
-app.use(cors({
+const corsOptions = {
     origin: 'https://ca-dev-platforms.onrender.com/api/cars',
-}));
-app.options('*', cors());
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+};
+app.use(cors(corsOptions));
 //Cors
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
