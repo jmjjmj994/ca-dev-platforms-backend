@@ -10,7 +10,7 @@ const supabase = createClient(
 //cors
 const app = express();
 const corsOptions = {
-  origin: 'https://ca-dev-platforms.onrender.com/api/cars',
+  origin: 'https://ca-dev-platforms.onrender.com',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 };
 
