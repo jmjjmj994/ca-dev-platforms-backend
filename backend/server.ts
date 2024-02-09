@@ -7,15 +7,14 @@ const supabase = createClient(
   'https://gnumotcfovtrisrpyswr.supabase.co',
   process.env.CLIENTKEY
 );
-
+//cors
 const app = express();
-app.use(
-  cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT'],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin:'https://ca-dev-platforms.onrender.com/api/cars'
+}))
+app.options('*', cors())
+
+//Cors
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log('Server running on', PORT);
