@@ -9,10 +9,12 @@ const supabase = createClient(
 );
 //cors
 const app = express();
-app.use(cors({
-  origin:'https://ca-dev-platforms.onrender.com/api/cars'
-}))
-app.options('*', cors())
+app.use(
+  cors({
+    origin: 'https://ca-dev-platforms.onrender.com/api/cars',
+  })
+);
+app.options('*', cors());
 
 //Cors
 const PORT = process.env.PORT;
