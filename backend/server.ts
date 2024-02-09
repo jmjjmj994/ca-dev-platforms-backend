@@ -2,13 +2,13 @@ import express from 'express';
 import 'dotenv/config';
 import { createClient } from '@supabase/supabase-js';
 
+const PORT = process.env.PORT;
+
 const supabase = createClient(
-  'https://gnumotcfovtrisrpyswr.supabase.co',
-  process.env.CLIENTKEY
+  'https://gnumotcfovtrisrpyswr.supabase.co', process.env.CLIENTKEY
 );
 
 const app = express();
-const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log('Server running on', PORT);
 });

@@ -17,6 +17,6 @@ app.get('/api/cars', async (request, response) => {
 app.post('/api/cars/insert', async (request, response) => {
   const { error } = await supabase
     .from('cars')
-    .insert({ id: 1, name: 'Denmark' });
+    .insert({ id: 4, brand: 'Bugatti Chiron', color: "White", price: 3000000 });
   if (error) return response.status(404).json({ error: 'Problems' });
 });
