@@ -9,7 +9,13 @@ const supabase = createClient(
 );
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT'],
+    credentials: true,
+  })
+);
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log('Server running on', PORT);
