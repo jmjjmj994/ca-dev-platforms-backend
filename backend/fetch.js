@@ -3,7 +3,7 @@ const options = {
   headers: { 'Content-type': 'application/json' },
 };
 
-const baseUrl = 'http://localhost:3001/api/cars'; //kjører på localhost, må ordnes så det kan gjøres via render url
+const baseUrl = 'https://ca-dev-platforms.onrender.com/api/cars'; //kjører på localhost, må ordnes så det kan gjøres via render url
 const data = async () => {
   const res = await fetch(baseUrl);
   const data = await res.json();
