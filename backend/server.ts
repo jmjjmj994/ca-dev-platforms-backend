@@ -10,7 +10,7 @@ const supabase = createClient(
 //cors
 const app = express();
 const corsOptions = {
-  origin: 'https://ca-dev-platforms.onrender.com',
+  origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 };
 
@@ -18,9 +18,6 @@ app.use(cors(corsOptions));
 
 //Cors
 const PORT = process.env.PORT;
-app.listen(PORT, () => {
-  console.log('Server running on', PORT);
-});
 
 app.get('/api/cars', async (request, response) => {
   const { data, error } = await supabase.from('cars').select('*');
@@ -32,4 +29,8 @@ app.post('/api/cars/insert', async (request, response) => {
     .from('cars')
     .insert({ id: 1, name: 'Denmark' });
   if (error) return response.status(404).json({ error: 'Problems' });
+});
+
+app.listen(PORT, () => {
+  console.log('Server running on', PORT);
 });
