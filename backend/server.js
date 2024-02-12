@@ -2,7 +2,8 @@ import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
 import { createClient } from '@supabase/supabase-js';
-const supabase = createClient('https://gnumotcfovtrisrpyswr.supabase.co', process.env.CLIENTKEY);
+const supabaseUrl = "https://gnumotcfovtrisrpyswr.supabase.co";
+const supabase = createClient(supabaseUrl, process.env.CLIENTKEY);
 //cors
 const app = express();
 app.use(express.json());
@@ -49,4 +50,68 @@ app.post('/api/cars', async (request, response) => {
         console.error('Error during database operation:', error);
     }
 });
-
+app.put('/api/cars/:id', async (request, response) => {
+    const { id } = request.params;
+    const body = request.body;
+    try {
+        const { data, error } = await supabase
+            .from("cars")
+            .update({
+            brand: body.brand,
+            color: body.color,
+            price: body.price,
+            img: body.img,
+        })
+            .eq("id", id);
+        if (error) {
+            response.status(400).json({ error: error.message });
+        }
+        else {
+            response.json({ message: "Updated successfully", data });
+        }
+    }
+    catch (error) {
+        console.error("Error during PUT request", error);
+    }
+});
+app.delete('/api/cars/:id', async (request, response) => {
+    const { id } = request.params;
+    try {
+        const { data, error } = await supabase
+            .from("cars")
+            .delete()
+            .eq("id", id);
+        if (error) {
+            response.status(400).json({ error: error.message });
+        }
+        else {
+            response.json({ message: "Car deleted successfully", data });
+        }
+    }
+    catch (error) {
+        console.error("Error during DELETE request", error);
+    }
+});
+app.listen(PORT, () => {
+    console.log('Server running on', PORT);
+});
+//Users
+const router = express.Router();
+router.post('/signup', async (request, response) => {
+    const { email, password } = request.body;
+    try {
+        const { user, session, error } = await supabase.auth.signUp({
+            email: email,
+            password: password
+        });
+        if (error) {
+            return response.status(400).json({ error: error.message });
+        }
+        else {
+            response.status(201).json({ message: "User created", user });
+        }
+    }
+    catch (error) {
+        response.status(500).json({ error: "Server error" });
+    }
+});

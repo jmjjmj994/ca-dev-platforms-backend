@@ -4,7 +4,7 @@ import cors from 'cors';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = "https://gnumotcfovtrisrpyswr.supabase.co";
-const supabase = createClient(supabaseUrl ,process.env.CLIENTKEY
+const supabase = createClient(supabaseUrl, process.env.CLIENTKEY
 );
 //cors
 const app = express();
