@@ -13,6 +13,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 //Cors
 const PORT = process.env.PORT;
+//???
 app.get('/', (request, response) => {
     response.send('cars');
 });
@@ -48,6 +49,3 @@ app.post('/api/cars', async (request, response) => {
         console.error('Error during database operation:', error);
     }
 });
-/* app.listen(PORT, () => {
-  console.log('Server running on', PORT);
-}); */
