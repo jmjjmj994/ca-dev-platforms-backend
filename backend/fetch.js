@@ -45,8 +45,11 @@ const testPut = async (id, brand, color, price, img) => {
       method: 'PUT',
       headers: options.headers,
       body: JSON.stringify({
-
-      })
+        brand: brand,
+        color: color,
+        price: price,
+        img: img,
+      }),
     });
     
     if(res.ok) {
