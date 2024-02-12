@@ -13,6 +13,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 //Cors
 const PORT = process.env.PORT;
+//???
 app.get('/', (request, response) => {
     response.send('cars');
 });
@@ -46,6 +47,48 @@ app.post('/api/cars', async (request, response) => {
     }
     catch (error) {
         console.error('Error during database operation:', error);
+    }
+});
+app.put('/api/cars/:id', async (request, response) => {
+    const { id } = request.params;
+    const body = request.body;
+    try {
+        const { data, error } = await supabase
+            .from("cars")
+            .update({
+            brand: body.brand,
+            color: body.color,
+            price: body.price,
+            img: body.img,
+        })
+            .eq("id", id);
+        if (error) {
+            response.status(400).json({ error: error.message });
+        }
+        else {
+            response.json({ message: "Updated successfully", data });
+        }
+    }
+    catch (error) {
+        console.error("Error during PUT request", error);
+    }
+});
+app.delete('/api/cars/:id', async (request, response) => {
+    const { id } = request.params;
+    try {
+        const { data, error } = await supabase
+            .from("cars")
+            .delete()
+            .eq("id", id);
+        if (error) {
+            response.status(400).json({ error: error.message });
+        }
+        else {
+            response.json({ message: "Car deleted successfully", data });
+        }
+    }
+    catch (error) {
+        console.error("Error during DELETE request", error);
     }
 });
 app.listen(PORT, () => {
