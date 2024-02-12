@@ -3,9 +3,8 @@ import 'dotenv/config';
 import cors from 'cors';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  'https://gnumotcfovtrisrpyswr.supabase.co',
-  process.env.CLIENTKEY
+const supabaseUrl = "https://gnumotcfovtrisrpyswr.supabase.co";
+const supabase = createClient(supabaseUrl ,process.env.CLIENTKEY
 );
 //cors
 const app = express();
@@ -105,3 +104,25 @@ app.put('/api/cars/:id', async (request, response) => {
 app.listen(PORT, () => {
   console.log('Server running on', PORT);
 }); 
+
+//Users
+const router = express.Router()
+
+router.post('/signup', async (request, response) => {
+    const  { email, password } = request.body;
+    
+    try {
+        const {user, session, error} = await supabase.auth.signUp({
+            email: email,
+            password: password
+        });
+
+        if (error) {
+            return response.status(400).json({error: error.message});
+        } else {
+            response.status(201).json({message: "User created", user});
+        }
+    } catch (error) {
+        response.status(500).json({error: "Server error"}); 
+    }
+});
