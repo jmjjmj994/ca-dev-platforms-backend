@@ -5,9 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "node backend/users.js && node backend/server.js --env-file=.env app.js",
-    "fetch": "node backend/fetch.js",
-    "test-signup": "node backend/testSignup.js"
+    "dev": "nodemon backend/server.js --env-file=.env app.js",
+    "fetch":"node backend/fetch.js"
   },
   "keywords": [],
   "author": "",

@@ -30,6 +30,3 @@ router.post('/signup', async (request, response) => {
         response.status(500).json({error: "Server error"}); 
     }
 });
-
-
-

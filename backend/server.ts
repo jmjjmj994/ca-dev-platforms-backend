@@ -59,6 +59,9 @@ app.post('/api/cars', async (request, response) => {
   }
 });
 
+<<<<<<< HEAD
+/* app.listen(PORT, () => {
+=======
 app.put('/api/cars/:id', async (request, response) => {
   const { id } = request.params;
   const body = request.body;
@@ -103,5 +106,6 @@ app.put('/api/cars/:id', async (request, response) => {
     }
   });
 app.listen(PORT, () => {
+>>>>>>> users
   console.log('Server running on', PORT);
-});
+}); */
