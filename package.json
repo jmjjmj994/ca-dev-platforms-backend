@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "backend/users.js && backend/server.js --env-file=.env app.js",
+    "dev": "node backend/users.js && node backend/server.js --env-file=.env app.js",
     "fetch":"node backend/fetch.js"
   },
   "keywords": [],
