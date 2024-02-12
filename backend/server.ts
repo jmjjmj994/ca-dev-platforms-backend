@@ -58,6 +58,6 @@ app.post('/api/cars', async (request, response) => {
   }
 });
 
-app.listen(PORT, () => {
+/* app.listen(PORT, () => {
   console.log('Server running on', PORT);
-});
+}); */

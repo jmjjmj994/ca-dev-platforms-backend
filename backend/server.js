@@ -48,6 +48,6 @@ app.post('/api/cars', async (request, response) => {
         console.error('Error during database operation:', error);
     }
 });
-app.listen(PORT, () => {
-    console.log('Server running on', PORT);
-});
+/* app.listen(PORT, () => {
+  console.log('Server running on', PORT);
+}); */
