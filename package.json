@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon backend/server.js --env-file=.env app.js",
+    "dev": "backend/server.js --env-file=.env app.js",
     "fetch":"node backend/fetch.js"
   },
   "keywords": [],
