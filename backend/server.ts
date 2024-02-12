@@ -59,6 +59,7 @@ app.post('/api/cars', async (request, response) => {
   }
 });
 
+
 app.put('/api/cars/:id', async (request, response) => {
   const { id } = request.params;
   const body = request.body;
@@ -102,6 +103,6 @@ app.put('/api/cars/:id', async (request, response) => {
       console.error("Error during DELETE request", error);
     }
   });
-app.listen(PORT, () => {
+/* app.listen(PORT, () => {
   console.log('Server running on', PORT);
-});
+}); */

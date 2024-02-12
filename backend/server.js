@@ -49,6 +49,7 @@ app.post('/api/cars', async (request, response) => {
         console.error('Error during database operation:', error);
     }
 });
+
 app.put('/api/cars/:id', async (request, response) => {
     const { id } = request.params;
     const body = request.body;
@@ -91,6 +92,7 @@ app.delete('/api/cars/:id', async (request, response) => {
         console.error("Error during DELETE request", error);
     }
 });
-app.listen(PORT, () => {
-    console.log('Server running on', PORT);
-});
+
+/* app.listen(PORT, () => {
+  console.log('Server running on', PORT);
+}); */
