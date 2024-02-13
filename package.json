@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "node backend/server.js --env-file=.env app.js",
-    "fetch":"node backend/fetch.js"
+    "fetch":"node backend/fetch.js",
+    "test-signup": "node backend/signupTest.js"
   },
   "keywords": [],
   "author": "",

@@ -115,3 +115,17 @@ router.post('/signup', async (request, response) => {
         response.status(500).json({ error: "Server error" });
     }
 });
+router.get('/getuser', async (request, response) => {
+    try {
+        const { data, error } = await supabase.from('users').select('*');
+        if (error) {
+            return response.status(400).json({ error: error.message });
+        }
+        else {
+            response.status(200).json({ message: "User found", data });
+        }
+    }
+    catch (error) {
+        response.status(500).json({ error: "Server error" });
+    }
+});

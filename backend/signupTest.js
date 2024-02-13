@@ -28,4 +28,4 @@ const testSignup = async (email, password) => {
     }
 };
 
-testSignup("test@example.com", "password");
+testSignup("messi@hotmail.com", "messi123");
