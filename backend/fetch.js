@@ -73,7 +73,7 @@ const testPut = async (id, brand, color, price, img) => {
 
 const signUpUrl = `${supabaseUrl}/auth/v1/signup`;
 
-const testSignup = async (email, password) => {
+const testSignup = async (firstName, lastName, email, password) => {
     try {
       const response = await fetch(signUpUrl, {
         method: "POST",
@@ -82,6 +82,8 @@ const testSignup = async (email, password) => {
           "apikey": CLIENTKEY,
         },
         body: JSON.stringify({
+          firstName,
+          lastName,
           email,
           password,
         }),
