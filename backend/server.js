@@ -90,24 +90,39 @@ app.listen(PORT, () => {
 
 app.post('/api/signup', async (request, response) => {
   const { firstName, lastName, email, password } = request.body;
-  try {
+  /*   try {
     const { user, error } = await supabase.auth.signUp({
       firstName: firstName,
       lastName: lastName,
       email: email,
       password: password,
     });
-    if (error) {
-      return response.status(400).json({ error: error.message });
-    }
-
-    return response
-      .status(201)
-      .json({ message: 'User created successfully', token: user.access_token });
+    console.log(user);
+    if (error) response.status(400).json({ error: error.message });
   } catch (error) {
-    response.status(500).json({ error: 'Server error' });
-  }
+    console.error(error);
+  } finally {
+    console.log(user);
+    response
+      .status(201)
+      .json({ message: 'User created successfully', token: user.data.session.access_token });
+  } */
+  supabase.auth
+    .signUp({
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+    })
+    .then((user, error) => {
+      if (error) {
+        response.json({ error: 'Error' });
+      } else {
+        response.json(user.data.session.access_token);
+      }
+    });
 });
+
 app.get('/api/getuser', async (request, response) => {
   try {
     const { data, error } = await supabase.from('users').select('*');
