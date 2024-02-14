@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import fetch from 'node-fetch';
 const options = {
   headers: { 'Content-type': 'application/json' },
 };
