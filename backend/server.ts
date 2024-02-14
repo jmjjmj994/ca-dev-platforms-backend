@@ -109,22 +109,28 @@ app.listen(PORT, () => {
 const router = express.Router()
 
 router.post('/signup', async (request, response) => {
-    const  { email, password } = request.body;
-    
-    try {
-        const {user, session, error} = await supabase.auth.signUp({
-            email: email,
-            password: password
-        });
+  const {firstName, lastName, email, password, } = request.body;
 
-        if (error) {
-            return response.status(400).json({error: error.message});
-        } else {
-            response.status(201).json({message: "User created", user});
-        }
-    } catch (error) {
-        response.status(500).json({error: "Server error"}); 
+  try {
+    const { user, error } = await supabase.auth.signUp({
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password
+    });
+
+    if (error) {
+      return response.status(400).json({ error: error.message });
     }
+
+    if (user) {
+      return response.status(201).json({ message: "User created", user });
+    } else {
+      return response.status(404).json({ error: "User not created" });
+    }
+  } catch (error) {
+    response.status(500).json({ error: "Server error" });
+  }
 });
 
 router.get('/getuser', async (request, response) => {
