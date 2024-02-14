@@ -109,16 +109,15 @@ app.post('/signup', async (request, response) => {
         if (error) {
             return response.status(400).json({ error: error.message });
         }
-        if (user) {
-            return response.status(201).json({ message: "User created", user });
-        }
-        
+      
+        return response.status(201).json({ message: "User created successfully", user });
     } 
   
     
     catch (error) {
         response.status(500).json({ error: "Server error" });
     }
+    
 });
 app.get('/getuser', async (request, response) => {
     try {
