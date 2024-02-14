@@ -79,7 +79,7 @@ const testSignup = async (firstName, lastName, email, password) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "apikey": CLIENTKEY
+     
        
         },
         body: JSON.stringify({
@@ -96,7 +96,7 @@ const testSignup = async (firstName, lastName, email, password) => {
       console.error("Error:", response.status, response.statusText, error);
     }
 };
-testSignup('wqewqe', 'weqeqwe', 'wqeqwe@gmail.com',   '21eweqwe')
+testSignup('wqewqweweqwqesaddsadqe', 'weqeqqwesadsdadsawqewqewe', 'wqeqwwqqweasadsdaadssddsae@gmail.com',   '21eweqwe')
 
 //Sign In fetch test
 

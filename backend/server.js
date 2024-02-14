@@ -112,9 +112,7 @@ app.post('/signup', async (request, response) => {
         if (user) {
             return response.status(201).json({ message: "User created", user });
         }
-        else {
-            return response.status(404).json({ error: "User not created" });
-        }
+        
     } 
   
     
