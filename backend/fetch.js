@@ -71,7 +71,7 @@ const testPut = async (id, brand, color, price, img) => {
 
 //Sign Up fetch test
 
-const signUpUrl = `${supabaseUrl}/auth/v1/signup`;
+const signUpUrl = `https://ca-dev-platforms.onrender.com/signup`;
 
 const testSignup = async (firstName, lastName, email, password) => {
     try {
@@ -79,23 +79,24 @@ const testSignup = async (firstName, lastName, email, password) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "apikey": CLIENTKEY,
+          "apikey": CLIENTKEY
+       
         },
         body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          password,
+          firstName:firstName,
+          lastName:lastName,
+          email:email,
+          password:password,
         }),
       });
   
       const data = await response.json();
-      console.log(data);
+      console.log(data, response);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error:", response.status, response.statusText, error);
     }
 };
-
+testSignup('wqewqe', 'weqeqwe', 'wqeqwe@gmail.com',   '21eweqwe')
 
 //Sign In fetch test
 

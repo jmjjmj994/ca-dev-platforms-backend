@@ -8,7 +8,7 @@
     "dev": "node backend/server.js --env-file=.env app.js",
     "fetch":"node backend/fetch.js",
     "test-signup": "node backend/signupTest.js",
-    "test-signin": "node backend/signinTest.js"
+    "test-signin": "node backend/fetch.js"
   },
   "keywords": [],
   "author": "",

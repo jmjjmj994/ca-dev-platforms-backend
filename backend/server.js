@@ -96,10 +96,10 @@ app.listen(PORT, () => {
     console.log('Server running on', PORT);
 });
 //Users
-const router = express.Router();
-router.post('/signup', async (request, response) => {
+
+app.post('/signup', async (request, response) => {
     const { firstName, lastName, email, password, } = request.body;
-    try {
+     try {
         const { user, error } = await supabase.auth.signUp({
             firstName: firstName,
             lastName: lastName,
@@ -115,12 +115,14 @@ router.post('/signup', async (request, response) => {
         else {
             return response.status(404).json({ error: "User not created" });
         }
-    }
+    } 
+  
+    
     catch (error) {
         response.status(500).json({ error: "Server error" });
     }
 });
-router.get('/getuser', async (request, response) => {
+app.get('/getuser', async (request, response) => {
     try {
         const { data, error } = await supabase.from('users').select('*');
         if (error) {
