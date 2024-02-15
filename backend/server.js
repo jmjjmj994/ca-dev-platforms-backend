@@ -123,7 +123,7 @@ app.post('/api/signup', async (request, response) => {
     });
 });
 
-app.get('/api/getuser', async (request, response) => {
+app.get('/api/users', async (request, response) => {
   try {
     const { data, error } = await supabase.from('users').select('*');
     if (error) {
