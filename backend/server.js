@@ -125,7 +125,7 @@ app.post('/api/signup', async (request, response) => {
 //Sign in
 app.post('/api/signin', async (request, response) => {
  const {email, password} = request.body
-    const { user, session, error } = await   supabase.auth
+    const { user, session, error } =  supabase.auth
     .signInWithPassword({
       email: email,
       password: password,
@@ -134,7 +134,7 @@ app.post('/api/signin', async (request, response) => {
       if (error) {
         response.json({ error: 'Error' });
       } else {
-        response.status(200).json({ message: 'User signed in successfully', token: session.access_token });
+        response.status(200).json({ message: 'User signed in successfully' });
       }
     });
 });
