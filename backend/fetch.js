@@ -95,11 +95,10 @@ const testSignup = async (firstName, lastName, email, password) => {
       console.error("Error:", response.status, response.statusText, error);
     }
 };
-testSignup('wqewqweweqwqesaddsadqe', 'weqeqqwesadsdadsawqewqewe', 'wqeqwwqqweasadsdaadssddsae@gmail.com',   '21eweqwe')
 
 //Sign In fetch test
 
-const signInUrl = `${supabaseUrl}/auth/v1/token?grant_type=password`;
+const signInUrl = `https://ca-dev-platforms.onrender.com/api/signin`;
 
 const testSignIn = async (email, password) => {
     try {
@@ -110,8 +109,8 @@ const testSignIn = async (email, password) => {
                 "apikey": CLIENTKEY
             },
             body: JSON.stringify({
-                email,
-                password
+               email: email,
+               password: password
             })
         })
         const data = await response.json();
@@ -120,3 +119,5 @@ const testSignIn = async (email, password) => {
         console.error("Error", error);
     }
 };
+
+testSignIn("test123@gmail.com","test123");
