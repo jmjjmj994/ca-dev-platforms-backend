@@ -1,45 +1,34 @@
 import express from 'express';
-import dotenv from 'dotenv/config';
+import 'dotenv/config';
 import cors from 'cors';
-import jwt from 'jsonwebtoken';
 import { createClient } from '@supabase/supabase-js';
-
-// Initialize Express app
+const supabaseUrl = 'https://gnumotcfovtrisrpyswr.supabase.co';
+const supabase = createClient(supabaseUrl, process.env.CLIENTKEY);
+//cors
 const app = express();
-
 app.use(express.json());
-app.use(cors({
+const corsOptions = {
   origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-}));
-
-// Supabase
-const supabaseUrl = 'https://gnumotcfovtrisrpyswr.supabase.co';
-const supabase = createClient(supabaseUrl, process.env.CLIENTKEY, process.env.SUPABASE_SERVICE_ROLE_KEY);
-
+};
+app.use(cors(corsOptions));
+//Cors
 const PORT = process.env.PORT;
-
-// Routes
-
-// Cars
+//???
 app.get('/', (request, response) => {
   response.send('cars');
 });
-
 app.get('/api/cars', async (request, response) => {
   const { data, error } = await supabase.from('cars').select('*');
-  if (error) {
+  if (error)
     return response.status(404).json({ error: 'Problems fetching data' });
-  }
   response.json({ data });
 });
-
 app.post('/api/cars', async (request, response) => {
   const body = request.body;
   try {
-    if (!body.brand || !body.color || !body.price) {
+    if (!body.brand || !body.color || !body.price)
       return response.status(404).json({ error: 'Props missing' }).end();
-    }
     const { data, error } = await supabase.from('cars').insert([
       {
         brand: body.brand,
@@ -59,7 +48,6 @@ app.post('/api/cars', async (request, response) => {
     console.error('Error during database operation:', error);
   }
 });
-
 app.put('/api/cars/:id', async (request, response) => {
   const { id } = request.params;
   const body = request.body;
@@ -82,7 +70,6 @@ app.put('/api/cars/:id', async (request, response) => {
     console.error('Error during PUT request', error);
   }
 });
-
 app.delete('/api/cars/:id', async (request, response) => {
   const { id } = request.params;
   try {
@@ -97,28 +84,45 @@ app.delete('/api/cars/:id', async (request, response) => {
   }
 });
 
-// Users
+//Users
+
+//Sign up
 app.post('/api/signup', async (request, response) => {
   const { firstName, lastName, email, password } = request.body;
-  try {
+  /*   try {
     const { user, error } = await supabase.auth.signUp({
+      firstName: firstName,
+      lastName: lastName,
       email: email,
       password: password,
-      data: {
-        firstName: firstName,
-        lastName: lastName,
-      },
     });
-    if (error) {
-      return response.status(400).json({ error: error.message });
-    }
-    response.status(201).json({ message: 'User created successfully' });
+    console.log(user);
+    if (error) response.status(400).json({ error: error.message });
   } catch (error) {
     console.error(error);
-    response.status(500).json({ error: 'Server error' });
-  }
+  } finally {
+    console.log(user);
+    response
+      .status(201)
+      .json({ message: 'User created successfully', token: user.data.session.access_token });
+  } */
+  supabase.auth
+    .signUp({
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+    })
+    .then((user, error) => {
+      if (error) {
+        response.json({ error: 'Error' });
+      } else {
+        response.json(user.data.session.access_token);
+      }
+    });
 });
 
+//Sign in
 app.post('/api/signin', async (request, response) => {
   const { email, password } = request.body;
   try {
@@ -135,6 +139,7 @@ app.post('/api/signin', async (request, response) => {
     response.status(500).json({ error: 'Server error' });
   }
 });
+
 
 app.get('/api/getuser', async (request, response) => {
   try {
