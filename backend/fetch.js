@@ -70,7 +70,7 @@ const testPut = async (id, brand, color, price, img) => {
 
 //Sign Up fetch test
 
-const signUpUrl = `https://ca-dev-platforms.onrender.com/signup`;
+const signUpUrl = `https://ca-dev-platforms.onrender.com/api/signup`;
 
 const testSignup = async (firstName, lastName, email, password) => {
     try {

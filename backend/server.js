@@ -83,11 +83,10 @@ app.delete('/api/cars/:id', async (request, response) => {
     console.error('Error during DELETE request', error);
   }
 });
-app.listen(PORT, () => {
-  console.log('Server running on', PORT);
-});
+
 //Users
 
+//Sign up
 app.post('/api/signup', async (request, response) => {
   const { firstName, lastName, email, password } = request.body;
   /*   try {
@@ -123,6 +122,25 @@ app.post('/api/signup', async (request, response) => {
     });
 });
 
+//Sign in
+app.post('/api/signin', async (request, response) => {
+  const { email, password } = request.body;
+  try {
+    const { user, session, error } = await supabase.auth.signIn({
+      email: email,
+      password: password,
+    });
+    if (error) {
+      return response.status(401).json({ error: error.message });
+    }
+    response.status(200).json({ message: 'User signed in successfully', token: session.access_token });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: 'Server error' });
+  }
+});
+
+
 app.get('/api/getuser', async (request, response) => {
   try {
     const { data, error } = await supabase.from('users').select('*');
@@ -134,4 +152,9 @@ app.get('/api/getuser', async (request, response) => {
   } catch (error) {
     response.status(500).json({ error: 'Server error' });
   }
+});
+
+
+app.listen(PORT, () => {
+  console.log('Server running on', PORT);
 });
