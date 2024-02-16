@@ -124,19 +124,34 @@ app.post('/api/signup', async (request, response) => {
 
 //Sign in
 app.post('/api/signin', async (request, response) => {
- const {email, password} = request.body
-    const { user, session, error } =  supabase.auth
+
+
+try{
+  const {data, error} = await supabase.auth.signInWithPassword({
+    email:'test123@gmail.com',
+    password:'test123',
+    })
+
+    if(error) return response(404).response.end()
+    console.log(data)
+}catch(error) {}
+
+
+
+
+/*  const {email, password} = request.body
+    const { user, session, error } = await supabase.auth
     .signInWithPassword({
       email: email,
       password: password,
-    })
-    .then((user, error) => {
+    }).then((user, error) => {
       if (error) {
         response.json({ error: 'Error' });
       } else {
+        console.log(user)
         response.status(200).json({ message: 'User signed in successfully' });
       }
-    });
+    }); */
 });
 
 
