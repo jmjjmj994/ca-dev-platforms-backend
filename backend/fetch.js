@@ -120,4 +120,4 @@ const testSignIn = async (email, password) => {
     }
 };
 
-testSignIn("test123@gmail.com","test123");
+testSignIn("samailtest@gmail.com","samailtest");
