@@ -126,16 +126,17 @@ try{
 
 app.get('/api/getuser', async (request, response) => {
   try {
-    const { data, error } = await supabase.from('users').select('*');
+    const { data, error } = await supabase.auth.admin.listUsers();
     if (error) {
       return response.status(400).json({ error: error.message });
     } else {
+      console.log("Users", users);
       response.status(200).json({ message: 'User found', data });
     }
   } catch (error) {
     response.status(500).json({ error: 'Server error' });
   }
-});
+}); 
 
 
 app.listen(PORT, () => {
