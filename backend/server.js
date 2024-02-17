@@ -101,19 +101,24 @@ app.post('/api/signup', async (request, response) => {
     },
   });
 
-  if (error) response.json(error.message).end();
-
-  response.json({
-    user: {
-      id: data.user.id,
-      email: data.user.email,
-    },
-    session: {
-      access_token: data.session.access_token,
-      token_type: data.session.token_type,
-      expires: data.session.expires_in,
-    },
-  });
+  if (error) {
+    response.json(error.message).status(400).end();
+  } else {
+    response
+      .json({
+        user: {
+          id: data.user.id,
+          email: data.user.email,
+        },
+        session: {
+          access_token: data.session.access_token,
+          token_type: data.session.token_type,
+          expires: data.session.expires_in,
+        },
+      })
+      .status(200)
+      .end();
+  }
 
   /*  if (error)
     response.status({
