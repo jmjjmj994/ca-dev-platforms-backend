@@ -117,10 +117,9 @@ app.post('/api/signup', async (request, response) => {
       },
     });
   } catch (err) {
-    console.error('Unexpected error during signup:', err);
     response
       .status(500)
-      .json({ error: 'Unexpected error occurred during signup.' });
+      .json({ message: 'Unexpected error occurred during signup.' });
   }
 });
 
