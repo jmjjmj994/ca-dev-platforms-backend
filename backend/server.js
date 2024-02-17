@@ -88,7 +88,42 @@ app.delete('/api/cars/:id', async (request, response) => {
 
 //Sign up
 app.post('/api/signup', async (request, response) => {
-  const { firstName, lastName, email, password } = request.body;
+  const { email, password, first_name, last_name } = request.body;
+
+  const { data, error } = await supabase.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      data: {
+        first_name: first_name,
+        last_name: last_name,
+      },
+    },
+  });
+
+  if (error) response.json({ error: 'User already registered' }).end();
+  
+  response.json({
+    user: {
+      id: data.user.id,
+      email: data.user.email,
+    },
+    session: {
+      access_token: data.session.access_token,
+      token_type: data.session.token_type,
+      expires: data.session.expires_in,
+    },
+  });
+  
+
+  /*  if (error)
+    response.status({
+      message: error.message,
+      code: error.code,
+      details: error.details,
+    }); */
+
+  /*   const { firstName, lastName, email, password } = request.body;
   await supabase.auth
     .signUp({
       firstName: firstName,
@@ -96,7 +131,7 @@ app.post('/api/signup', async (request, response) => {
       email: email,
       password: password,
     })
-    .then((user, error) => {
+    .then((data, error) => {
       if (error) {
         response.json({ error: 'Error' });
       } else {
@@ -108,7 +143,7 @@ app.post('/api/signup', async (request, response) => {
           email: user.data.email,
         });
       }
-    });
+    }); */
 });
 
 //Sign in
