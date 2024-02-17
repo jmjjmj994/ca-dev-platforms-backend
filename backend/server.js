@@ -87,7 +87,7 @@ app.delete('/api/cars/:id', async (request, response) => {
 //Users
 
 //Sign up
-app.post('/api/signup', async (request, response) => {
+app.post('/api/register', async (request, response) => {
   try {
     const { email, password, firstName, lastName } = request.body;
     const { data, error } = await supabase.auth.signUp({
@@ -124,17 +124,19 @@ app.post('/api/signup', async (request, response) => {
 });
 
 //Sign in
-app.post('/api/signin', async (request, response) => {
+app.post('/api/login', async (request, response) => {
   const { email, password } = request.body;
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
-    if (error) return response(404).response.end();
-    return response
-      .json({ message: 'Successfully Signed In!', data: data })
-      .response.end();
+    if (error) return response.json({ error: error.message }).status(400).end();
+    response
+      .json({
+        token: data.session.access_token,
+      })
+      .end();
   } catch (error) {}
 });
 
