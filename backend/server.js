@@ -88,9 +88,7 @@ app.delete('/api/cars/:id', async (request, response) => {
 
 //Sign up
 app.post('/api/signup', async (request, response) => {
-
   const { firstName, lastName, email, password } = request.body;
- 
   supabase.auth
     .signUp({
       firstName: firstName,
@@ -102,27 +100,32 @@ app.post('/api/signup', async (request, response) => {
       if (error) {
         response.json({ error: 'Error' });
       } else {
-        response.json(user.data.session.access_token);
+        response.json({
+          access_token: `${user.data.session.token_type} ${user.data.session.access_token}`,
+          expires_in: user.data.session.expires_in,
+          refresh_token: user.data.session.refresh_token,
+          id: user.data.user.id,
+          email: user.data.email,
+        });
       }
     });
 });
 
 //Sign in
 app.post('/api/signin', async (request, response) => {
+  const { email, password } = request.body;
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
 
-const {email, password} = request.body;
-try{
-  const {data, error} = await supabase.auth.signInWithPassword({
-    email:email,
-    password:password,
-    })
-
-    if(error) return response(404).response.end()
-    return response.json({message:'Successfully Signed In!', data:data}).response.end()
-}catch(error) {}
-
+    if (error) return response(404).response.end();
+    return response
+      .json({ message: 'Successfully Signed In!', data: data })
+      .response.end();
+  } catch (error) {}
 });
-
 
 app.get('/api/getuser', async (request, response) => {
   try {
@@ -130,14 +133,13 @@ app.get('/api/getuser', async (request, response) => {
     if (error) {
       return response.status(400).json({ error: error.message });
     } else {
-      console.log("Users", users);
+      console.log('Users', users);
       response.status(200).json({ message: 'User found', data });
     }
   } catch (error) {
     response.status(500).json({ error: 'Server error' });
   }
-}); 
-
+});
 
 app.listen(PORT, () => {
   console.log('Server running on', PORT);
