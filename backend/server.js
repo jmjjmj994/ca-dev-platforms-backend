@@ -131,14 +131,21 @@ app.post('/api/login', async (request, response) => {
       email: email,
       password: password,
     });
-    console.log(error, data);
+
     if (error) return response.json({ error: error.message }).end();
+    if (!data) {
+      console.error('No data returned from Supabase');
+      return response.status(500).json({ error: 'Server error' }).end();
+    }
     response
       .json({
         token: data.session.access_token,
       })
       .end();
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: 'Server error' }).end();
+  }
 });
 
 app.get('/api/getuser', async (request, response) => {
