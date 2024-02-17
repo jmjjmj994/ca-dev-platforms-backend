@@ -132,12 +132,26 @@ app.post('/api/login', async (request, response) => {
       password: password,
     });
     if (error) return response.json({ error: error.message }).status(400).end();
+
+
+
     response
       .json({
         token: data.session.access_token,
       })
       .end();
-  } catch (error) {}
+  } catch (error) {
+    response
+    .status(500)
+    .json({ message: 'Unexpected error occurred during signup.' });
+  }
+
+
+
+
+
+
+
 });
 
 app.get('/api/getuser', async (request, response) => {
