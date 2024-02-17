@@ -88,21 +88,21 @@ app.delete('/api/cars/:id', async (request, response) => {
 
 //Sign up
 app.post('/api/signup', async (request, response) => {
-  const { email, password, first_name, last_name } = request.body;
+  const { email, password, firstName, lastName } = request.body;
 
   const { data, error } = await supabase.auth.signUp({
     email: email,
     password: password,
     options: {
       data: {
-        first_name: first_name,
-        last_name: last_name,
+        firstName: firstName,
+        lastName: lastName,
       },
     },
   });
 
-  if (error) response.json({ error: 'User already registered' }).end();
-  
+  if (error) response.json(error.message).end();
+
   response.json({
     user: {
       id: data.user.id,
@@ -114,7 +114,6 @@ app.post('/api/signup', async (request, response) => {
       expires: data.session.expires_in,
     },
   });
-  
 
   /*  if (error)
     response.status({
@@ -154,7 +153,6 @@ app.post('/api/signin', async (request, response) => {
       email: email,
       password: password,
     });
-
     if (error) return response(404).response.end();
     return response
       .json({ message: 'Successfully Signed In!', data: data })
