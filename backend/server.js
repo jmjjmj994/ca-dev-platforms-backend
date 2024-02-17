@@ -102,7 +102,7 @@ app.post('/api/signup', async (request, response) => {
     });
 
     if (error) {
-      return response.status(400).json({ error: error.message });
+      return response.status(400).json({ message: error.message });
     }
 
     response.status(200).json({
