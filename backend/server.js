@@ -88,71 +88,40 @@ app.delete('/api/cars/:id', async (request, response) => {
 
 //Sign up
 app.post('/api/signup', async (request, response) => {
-  const { email, password, firstName, lastName } = request.body;
-
-  const { data, error } = await supabase.auth.signUp({
-    email: email,
-    password: password,
-    options: {
-      data: {
-        firstName: firstName,
-        lastName: lastName,
-      },
-    },
-  });
-
-  if (error) {
-    response.json(error.message).status(400).end();
-  } else if (data && data.user) {
-    response
-      .json({
-        user: {
-          id: data.user.id,
-          email: data.user.email,
-        },
-        session: {
-          access_token: data.session.access_token,
-          token_type: data.session.token_type,
-          expires: data.session.expires_in,
-        },
-      })
-      .status(200)
-      .end();
-  } else {
-    response
-      .json({ error: 'Unexpected error occurred during signup.' })
-      .status(500)
-      .end();
-  }
-
-  /*  if (error)
-    response.status({
-      message: error.message,
-      code: error.code,
-      details: error.details,
-    }); */
-
-  /*   const { firstName, lastName, email, password } = request.body;
-  await supabase.auth
-    .signUp({
-      firstName: firstName,
-      lastName: lastName,
+  try {
+    const { email, password, firstName, lastName } = request.body;
+    const { data, error } = await supabase.auth.signUp({
       email: email,
       password: password,
-    })
-    .then((data, error) => {
-      if (error) {
-        response.json({ error: 'Error' });
-      } else {
-        response.json({
-          access_token: `${user.data.session.token_type} ${user.data.session.access_token}`,
-          expires_in: user.data.session.expires_in,
-          refresh_token: user.data.session.refresh_token,
-          id: user.data.user.id,
-          email: user.data.email,
-        });
-      }
-    }); */
+      options: {
+        data: {
+          firstName: firstName,
+          lastName: lastName,
+        },
+      },
+    });
+
+    if (error) {
+      return response.status(400).json({ error: error.message });
+    }
+
+    response.status(200).json({
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+      },
+      session: {
+        access_token: data.session.access_token,
+        token_type: data.session.token_type,
+        expires: data.session.expires_in,
+      },
+    });
+  } catch (err) {
+    console.error('Unexpected error during signup:', err);
+    response
+      .status(500)
+      .json({ error: 'Unexpected error occurred during signup.' });
+  }
 });
 
 //Sign in
