@@ -103,7 +103,7 @@ app.post('/api/signup', async (request, response) => {
 
   if (error) {
     response.json(error.message).status(400).end();
-  } else if(data && data.user){
+  } else if (data && data.user) {
     response
       .json({
         user: {
@@ -117,6 +117,11 @@ app.post('/api/signup', async (request, response) => {
         },
       })
       .status(200)
+      .end();
+  } else {
+    response
+      .json({ error: 'Unexpected error occurred during signup.' })
+      .status(500)
       .end();
   }
 
