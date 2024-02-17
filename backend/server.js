@@ -87,7 +87,7 @@ app.delete('/api/cars/:id', async (request, response) => {
 //Users
 
 //Sign up
-app.post('/api/register', async (request, response) => {
+app.post('/api/login', async (request, response) => {
   try {
     const { email, password, firstName, lastName } = request.body;
     const { data, error } = await supabase.auth.signUp({
@@ -131,27 +131,14 @@ app.post('/api/login', async (request, response) => {
       email: email,
       password: password,
     });
-    if (error) return response.json({ error: error.message }).status(400).end();
-
-
-
+    console.log(error, data)
+    if (error) return response.json({ error: error.message }).end();
     response
       .json({
         token: data.session.access_token,
       })
       .end();
-  } catch (error) {
-    response
-    .status(500)
-    .json({ message: 'Unexpected error occurred during signup.' });
-  }
-
-
-
-
-
-
-
+  } catch (error) {}
 });
 
 app.get('/api/getuser', async (request, response) => {
