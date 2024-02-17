@@ -87,7 +87,7 @@ app.delete('/api/cars/:id', async (request, response) => {
 //Users
 
 //Sign up
-app.post('/api/login', async (request, response) => {
+app.post('/api/register', async (request, response) => {
   try {
     const { email, password, firstName, lastName } = request.body;
     const { data, error } = await supabase.auth.signUp({
@@ -131,7 +131,7 @@ app.post('/api/login', async (request, response) => {
       email: email,
       password: password,
     });
-    console.log(error, data)
+    console.log(error, data);
     if (error) return response.json({ error: error.message }).end();
     response
       .json({
