@@ -89,7 +89,7 @@ app.delete('/api/cars/:id', async (request, response) => {
 //Sign up
 app.post('/api/signup', async (request, response) => {
   const { firstName, lastName, email, password } = request.body;
-  supabase.auth
+  await supabase.auth
     .signUp({
       firstName: firstName,
       lastName: lastName,
