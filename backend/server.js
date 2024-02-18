@@ -132,8 +132,6 @@ app.post('/api/login', async (request, response) => {
       password: password,
     });
 
-
-
     if (error) return response.json({ error: error.message }).end();
     if (!data) {
       console.error('No data returned from Supabase');
@@ -145,7 +143,6 @@ app.post('/api/login', async (request, response) => {
         email: data.user.email,
         token: data.session.access_token,
         id: data.user.id,
-        loggedIn: true,
       })
       .end();
   } catch (error) {
