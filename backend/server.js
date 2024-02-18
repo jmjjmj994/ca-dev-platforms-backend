@@ -132,6 +132,8 @@ app.post('/api/login', async (request, response) => {
       password: password,
     });
 
+
+
     if (error) return response.json({ error: error.message }).end();
     if (!data) {
       console.error('No data returned from Supabase');
@@ -140,8 +142,10 @@ app.post('/api/login', async (request, response) => {
 
     response
       .json({
+        email: data.user.email,
         token: data.session.access_token,
         id: data.user.id,
+        loggedIn: true,
       })
       .end();
   } catch (error) {
@@ -153,6 +157,7 @@ app.post('/api/login', async (request, response) => {
 app.get('/api/getuser', async (request, response) => {
   try {
     const { data, error } = await supabase.auth.admin.listUsers();
+    console.log(data);
     if (error) {
       return response.status(400).json({ error: error.message });
     } else {
