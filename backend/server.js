@@ -34,7 +34,7 @@ app.post('/api/cars', async (request, response) => {
         brand: body.brand,
         color: body.color,
         price: body.price,
-        img: body.image,
+        img: body.img,
       },
     ]);
     response.status(201).json({ success: `data inserted successfully` }).end();
