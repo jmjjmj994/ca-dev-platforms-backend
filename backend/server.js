@@ -137,9 +137,11 @@ app.post('/api/login', async (request, response) => {
       console.error('No data returned from Supabase');
       return response.status(500).json({ error: 'Server error' }).end();
     }
+
     response
       .json({
         token: data.session.access_token,
+        id: data.user.id,
       })
       .end();
   } catch (error) {
