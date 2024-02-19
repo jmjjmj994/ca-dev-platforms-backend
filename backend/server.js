@@ -1,9 +1,6 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
-import { createProxyMiddleware } from 'http-proxy-middleware';
-import pkg from '@supabase/supabase-js';
-const { auth } = pkg;
 import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = 'https://gnumotcfovtrisrpyswr.supabase.co';
 const supabase = createClient(supabaseUrl, process.env.CLIENTKEY);
@@ -39,7 +36,7 @@ app.post('/api/cars', async (request, response) => {
         brand: body.brand,
         color: body.color,
         price: body.price,
-        img: body.image,
+        img: body.img,
       },
     ]);
     response.status(201).json({ success: `data inserted successfully` }).end();
@@ -92,49 +89,78 @@ app.delete('/api/cars/:id', async (request, response) => {
 //Users
 
 //Sign up
-app.post('/api/signup', async (request, response) => {
-  const { firstName, lastName, email, password } = request.body;
-  supabase.auth
-    .signUp({
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      password: password,
-    })
-    .then((user, error) => {
-      if (error) {
-        response.json({ error: 'Error' });
-      } else {
-        response.json(user.data.session.access_token);
-      }
-    });
-});
-
-//Sign in
-app.post('/api/signin', async (request, response) => {
-  const { email, password } = request.body;
+app.post('/api/register', async (request, response) => {
   try {
-    const { user, session, error } = await supabase.auth.signIn({
+    const { email, password, firstName, lastName } = request.body;
+    const { data, error } = await supabase.auth.signUp({
       email: email,
       password: password,
+      options: {
+        data: {
+          firstName: firstName,
+          lastName: lastName,
+        },
+      },
     });
+
     if (error) {
-      return response.status(401).json({ error: error.message });
+      return response.status(400).json({ message: error.message });
     }
-    response.status(200).json({ message: 'User signed in successfully', token: session.access_token });
-  } catch (error) {
-    console.error(error);
-    response.status(500).json({ error: 'Server error' });
+
+    response.status(200).json({
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+      },
+      session: {
+        access_token: data.session.access_token,
+        token_type: data.session.token_type,
+        expires: data.session.expires_in,
+      },
+    });
+  } catch (err) {
+    response
+      .status(500)
+      .json({ message: 'Unexpected error occurred during signup.' });
   }
 });
 
+//Sign in
+app.post('/api/login', async (request, response) => {
+  const { email, password } = request.body;
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+
+    if (error) return response.json({ error: error.message }).end();
+    if (!data) {
+      console.error('No data returned from Supabase');
+      return response.status(500).json({ error: 'Server error' }).end();
+    }
+
+    response
+      .json({
+        email: data.user.email,
+        token: data.session.access_token,
+        id: data.user.id,
+      })
+      .end();
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: 'Server error' }).end();
+  }
+});
 
 app.get('/api/getuser', async (request, response) => {
   try {
-    const { data, error } = await supabase.from('users').select('*');
+    const { data, error } = await supabase.auth.admin.listUsers();
+    console.log(data);
     if (error) {
       return response.status(400).json({ error: error.message });
     } else {
+      console.log('Users', users);
       response.status(200).json({ message: 'User found', data });
     }
   } catch (error) {
@@ -142,60 +168,6 @@ app.get('/api/getuser', async (request, response) => {
   }
 });
 
-// Sales, fynker ikke ... 
-app.post('/api/sales', async (request, response) => {
-
-  if(!request.auth) {
-    return response.status(401).json({error: "Unauthorized"})
-  }
-
-  const userId = request.auth.sub;
-  const carId = request.body;
-  try {
-    //sjekker om bilen er tilgjengelig
-    const { data: soldCars, error: salesError } = await supabase
-      .from('sales')
-      .select('car_id')
-      .eq('car_id', carId)
-
-    if (rentalError) {
-      return response.status(404).json({ error: salesError.message });
-    }
-
-    if (soldCars.length > 0) {
-      return response.status(400).json({ error: "Car is already rented during this period" });
-    }
-
-    const { data, error } = await supabase
-      .from("sales")
-      .insert([
-        {
-          user_id: userId,
-          car_id: carId,
-          sale_date: new Date(),
-        }
-      ]);
-    if (error) {
-      return response.status(404).json({ error: error.message });
-    }
-    response.status(201).json({ message: "Rental created", data });
-  } catch (error) {
-    response.status(500).json({ error: "Server error" });
-  }
-});
-
-//Middleware
-
-app.use('/api', createProxyMiddleware({
-  target: supabaseUrl,
-  changeOrigin: true,
-  pathRewrite: {
-    '^/api': '/rest/v1',
-  },
-  headers: {
-    'apikey': anonKey, 
-  },
-}));
 
 app.listen(PORT, () => {
   console.log('Server running on', PORT);
