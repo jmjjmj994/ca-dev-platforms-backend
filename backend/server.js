@@ -4,6 +4,7 @@ import cors from 'cors';
 import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = 'https://gnumotcfovtrisrpyswr.supabase.co';
 const supabase = createClient(supabaseUrl, process.env.CLIENTKEY);
+const anonKey = process.env.CLIENTKEY
 //cors
 const app = express();
 app.use(express.json());
@@ -11,6 +12,7 @@ const corsOptions = {
   origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 };
+
 app.use(cors(corsOptions));
 //Cors
 const PORT = process.env.PORT;
@@ -165,6 +167,7 @@ app.get('/api/getuser', async (request, response) => {
     response.status(500).json({ error: 'Server error' });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log('Server running on', PORT);
