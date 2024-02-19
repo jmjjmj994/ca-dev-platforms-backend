@@ -1,9 +1,13 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import pkg from '@supabase/supabase-js';
+const { auth } = pkg;
 import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = 'https://gnumotcfovtrisrpyswr.supabase.co';
 const supabase = createClient(supabaseUrl, process.env.CLIENTKEY);
+const anonKey = process.env.CLIENTKEY
 //cors
 const app = express();
 app.use(express.json());
@@ -11,6 +15,7 @@ const corsOptions = {
   origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 };
+
 app.use(cors(corsOptions));
 //Cors
 const PORT = process.env.PORT;
@@ -89,23 +94,6 @@ app.delete('/api/cars/:id', async (request, response) => {
 //Sign up
 app.post('/api/signup', async (request, response) => {
   const { firstName, lastName, email, password } = request.body;
-  /*   try {
-    const { user, error } = await supabase.auth.signUp({
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      password: password,
-    });
-    console.log(user);
-    if (error) response.status(400).json({ error: error.message });
-  } catch (error) {
-    console.error(error);
-  } finally {
-    console.log(user);
-    response
-      .status(201)
-      .json({ message: 'User created successfully', token: user.data.session.access_token });
-  } */
   supabase.auth
     .signUp({
       firstName: firstName,
@@ -154,19 +142,37 @@ app.get('/api/getuser', async (request, response) => {
   }
 });
 
-// Rentals
-app.post('/api/rentals', async (request, response) => {
+// Sales, fynker ikke ... 
+app.post('/api/sales', async (request, response) => {
+
+  if(!request.auth) {
+    return response.status(401).json({error: "Unauthorized"})
+  }
+
   const userId = request.auth.sub;
-  const { carId, rentalStartDate, rentalEndDate } = request.body;
+  const carId = request.body;
   try {
+    //sjekker om bilen er tilgjengelig
+    const { data: soldCars, error: salesError } = await supabase
+      .from('sales')
+      .select('car_id')
+      .eq('car_id', carId)
+
+    if (rentalError) {
+      return response.status(404).json({ error: salesError.message });
+    }
+
+    if (soldCars.length > 0) {
+      return response.status(400).json({ error: "Car is already rented during this period" });
+    }
+
     const { data, error } = await supabase
-      .from('rentals')
+      .from("sales")
       .insert([
         {
           user_id: userId,
           car_id: carId,
-          rental_start_date: rentalStartDate,
-          rental_end_date: rentalEndDate,
+          sale_date: new Date(),
         }
       ]);
     if (error) {
@@ -177,6 +183,19 @@ app.post('/api/rentals', async (request, response) => {
     response.status(500).json({ error: "Server error" });
   }
 });
+
+//Middleware
+
+app.use('/api', createProxyMiddleware({
+  target: supabaseUrl,
+  changeOrigin: true,
+  pathRewrite: {
+    '^/api': '/rest/v1',
+  },
+  headers: {
+    'apikey': anonKey, 
+  },
+}));
 
 app.listen(PORT, () => {
   console.log('Server running on', PORT);
